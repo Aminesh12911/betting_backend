@@ -1,32 +1,38 @@
-import { initializeApp } from 'firebase-admin/app';
-import { getMessaging } from 'firebase-admin/messaging';
+import admin from "firebase-admin";
+import path from "path";
 
-process.env.GOOGLE_APPLICATION_CREDENTIALS = `${__dirname}/google-services.json`;
-const app = initializeApp();
+const serviceAccountPath = path.join(__dirname, "google-services.json");
+
+if (!admin.apps.length) {
+  admin.initializeApp({
+    credential: admin.credential.cert(serviceAccountPath),
+  });
+}
 
 interface INotiInput {
-  topic: 'Client' | 'Admin';
+  topic: "Client" | "Admin";
   title: string;
   body: string;
 }
-const sendNotification = async (args: INotiInput) => {
-  const { topic, title, body } = args;
+
+const sendNotification = async ({ topic, title, body }: INotiInput) => {
   const condition = `'${topic}' in topics`;
+
   const message = {
-    notification: {
-      title,
-      body,
-    },
+    notification: { title, body },
     condition,
   };
-  if (process.env.NODE_ENV === 'production') {
+
+  if (process.env.NODE_ENV === "production") {
     try {
-      getMessaging(app).send(message);
+      const res = await admin.messaging().send(message as any);
+      console.log("Notification sent:", res);
     } catch (e: any) {
-      console.log('Error sending notification');
-      console.log(e.message);
+      console.error("Error sending notification:", e.message);
     }
-  } else console.log(`On ${process.env.NODE_ENV} notification muted.`);
+  } else {
+    console.log(`Notification muted in ${process.env.NODE_ENV}`);
+  }
 };
 
 export default sendNotification;
