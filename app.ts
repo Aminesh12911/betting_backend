@@ -11,7 +11,6 @@ import gameRouter from './routes/gameRouter';
 import bidRouter from './routes/bidRoutes';
 import resultRouter from './routes/resultRouter';
 import winlistRouter from './routes/winlistRouter';
-import notificationRouter from './routes/notificationRouter';
 import AppError from './utils/appError';
 import globalErrorHandler from './controllers/errorController';
 
@@ -31,7 +30,6 @@ app.use('/api/v1/game', gameRouter);
 app.use('/api/v1/bid', bidRouter);
 app.use('/api/v1/result', resultRouter);
 app.use('/api/v1/winlist', winlistRouter);
-app.use('/api/v1/notification', notificationRouter);
 
 // static html page
 app.get('/', (req, res) => {

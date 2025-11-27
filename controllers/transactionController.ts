@@ -10,7 +10,7 @@ import AppConfig from '../models/appConfigModel';
 
 import ITransaction from '../types/Transaction';
 import IResponse from '../types/Response';
-import sendNotification from '../utils/notifications';
+import sendtion from '../utils/tions';
 
 const rewardReferee = async (user: IUser, amountPaid: number) => {
   // give referral percentage to refree
@@ -70,8 +70,8 @@ export const createTransaction = catchAsync(
     });
     const data = await transaction.populate('user');
 
-    // send notification to admin
-    sendNotification({
+    // send tion to admin
+    sendtion({
       topic: 'Admin',
       title:
         data.type === 'DEBIT' ? 'Withdraw Request Received' : 'Amount Added',
