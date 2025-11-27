@@ -1,11 +1,14 @@
 import admin from "firebase-admin";
-import path from "path";
 
-const serviceAccountPath = path.join(__dirname, "google-services.json");
+let serviceAccount: any = undefined;
+
+if (process.env.FIREBASE_SERVICE_ACCOUNT) {
+  serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
+}
 
 if (!admin.apps.length) {
   admin.initializeApp({
-    credential: admin.credential.cert(serviceAccountPath),
+    credential: admin.credential.cert(serviceAccount!),
   });
 }
 
